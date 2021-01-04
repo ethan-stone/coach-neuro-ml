@@ -35,18 +35,23 @@ from kedro.io import DataCatalog
 from kedro.pipeline import Pipeline
 from kedro.versioning import Journal
 
+from .pipelines.data_engineering import pipeline as de
+
 
 class ProjectHooks:
     @hook_impl
     def register_pipelines(self) -> Dict[str, Pipeline]:
-        """Register the project's pipeline.
+        """
+        Register the project's pipeline.
 
         Returns:
             A mapping from a pipeline name to a ``Pipeline`` object.
-
         """
-
-        return {"__default__": Pipeline([])}
+        de_pipeline = de.create_pipeline()
+        return {
+            "de": de_pipeline,
+            "__default__": de_pipeline
+        }
 
     @hook_impl
     def register_config_loader(self, conf_paths: Iterable[str]) -> ConfigLoader:
@@ -54,13 +59,16 @@ class ProjectHooks:
 
     @hook_impl
     def register_catalog(
-        self,
-        catalog: Optional[Dict[str, Dict[str, Any]]],
-        credentials: Dict[str, Dict[str, Any]],
-        load_versions: Dict[str, str],
-        save_version: str,
-        journal: Journal,
+            self,
+            catalog: Optional[Dict[str, Dict[str, Any]]],
+            credentials: Dict[str, Dict[str, Any]],
+            load_versions: Dict[str, str],
+            save_version: str,
+            journal: Journal,
     ) -> DataCatalog:
         return DataCatalog.from_config(
             catalog, credentials, load_versions, save_version, journal
         )
+
+
+project_hooks = ProjectHooks()
