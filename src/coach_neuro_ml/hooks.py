@@ -35,7 +35,8 @@ from kedro.io import DataCatalog
 from kedro.pipeline import Pipeline
 from kedro.versioning import Journal
 
-from .pipelines.data_engineering import pipeline as de
+from .pipelines.basketball.front_elbow.data_engineering import pipeline as basketball_front_elbow_de
+from .pipelines.basketball.front_elbow.model_building import pipeline as basketball_front_elbow_mb
 
 
 class ProjectHooks:
@@ -47,10 +48,13 @@ class ProjectHooks:
         Returns:
             A mapping from a pipeline name to a ``Pipeline`` object.
         """
-        de_pipeline = de.create_pipeline()
+        basketball_front_elbow_de_pipeline = basketball_front_elbow_de.create_pipeline()
+        basketball_front_elbow_mb_pipeline = basketball_front_elbow_mb.create_pipeline()
+
         return {
-            "de": de_pipeline,
-            "__default__": de_pipeline
+            "basketball_front_elbow_de_pipeline": basketball_front_elbow_de_pipeline,
+            "basketball_front_elbow_mb_pipeline": basketball_front_elbow_mb_pipeline,
+            "__default__": basketball_front_elbow_de_pipeline + basketball_front_elbow_mb_pipeline
         }
 
     @hook_impl
