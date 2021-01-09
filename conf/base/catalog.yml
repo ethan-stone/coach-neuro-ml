@@ -28,3 +28,19 @@ aws_basketball_front_elbow_model:
   filepath: "s3://coachneuros3/models/basketball/front_elbow/"
   credentials: dev_aws_s3
   versioned: True
+
+aws_basketball_front_legs_raw:
+  type: pandas.JSONDataSet
+  filepath: "s3://coachneuros3/raw-json-data/basketball/front_legs.json"
+  credentials: dev_aws_s3
+
+aws_basketball_front_legs_primary:
+  type: pandas.CSVDataSet
+  filepath: "s3://coachneuros3/raw-json-data/basketball/front_legs.csv"
+  credentials: dev_aws_s3
+
+aws_basketball_front_legs_model:
+  type: tensorflow.TensorFlowModelDataset
+  filepath: "s3://coachneuros3/models/basketball/front_legs/"
+  credentials: dev_aws_s3
+  versioned: True

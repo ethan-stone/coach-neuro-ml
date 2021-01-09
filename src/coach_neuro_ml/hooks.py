@@ -37,6 +37,8 @@ from kedro.versioning import Journal
 
 from .pipelines.basketball.front_elbow.data_engineering import pipeline as basketball_front_elbow_de
 from .pipelines.basketball.front_elbow.model_building import pipeline as basketball_front_elbow_mb
+from .pipelines.basketball.front_legs.data_engineering import pipeline as basketball_front_legs_de
+from .pipelines.basketball.front_legs.model_building import pipeline as basketball_front_legs_mb
 
 
 class ProjectHooks:
@@ -50,11 +52,17 @@ class ProjectHooks:
         """
         basketball_front_elbow_de_pipeline = basketball_front_elbow_de.create_pipeline()
         basketball_front_elbow_mb_pipeline = basketball_front_elbow_mb.create_pipeline()
+        basketball_front_legs_de_pipeline = basketball_front_legs_de.create_pipeline()
+        basketball_front_legs_mb_pipeline = basketball_front_legs_mb.create_pipeline()
 
         return {
             "basketball_front_elbow_de_pipeline": basketball_front_elbow_de_pipeline,
             "basketball_front_elbow_mb_pipeline": basketball_front_elbow_mb_pipeline,
-            "__default__": basketball_front_elbow_de_pipeline + basketball_front_elbow_mb_pipeline
+            "basketball_front_legs_de_pipeline": basketball_front_legs_de_pipeline,
+            "basketball_front_legs_mb_pipeline": basketball_front_legs_mb_pipeline,
+            "__default__":
+            basketball_front_elbow_de_pipeline + basketball_front_elbow_mb_pipeline +
+            basketball_front_legs_de_pipeline + basketball_front_legs_mb_pipeline
         }
 
     @hook_impl
