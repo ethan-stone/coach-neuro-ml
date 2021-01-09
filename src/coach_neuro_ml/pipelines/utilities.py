@@ -6,8 +6,10 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 from tensorflow.keras.layers import Dense, Dropout
 from tensorflow.keras.models import Sequential
+from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.regularizers import l2
+
 
 
 def process_raw_data_generic(raw_data, class_mappings):
@@ -49,16 +51,19 @@ def split_data_generic(data, parameters):
 
 def train_model_generic(X_train, y_train):
 
+    callback = EarlyStopping(monitor='loss', patience=3)
+
     model = Sequential([
         Dense(64, input_shape=(34,), activation='relu', kernel_regularizer=l2(0.001)),
         Dropout(0.2),
-        Dense(16, activation='relu'),
+        Dense(16, activation='relu', kernel_regularizer=l2(0.01)),
+        Dropout(0.1),
         Dense(3, activation='softmax')
     ])
 
     model.compile(optimizer="Adam", loss="mse")
 
-    model.fit(X_train, y_train, epochs=50, batch_size=16)
+    model.fit(X_train, y_train, epochs=100, batch_size=16, callbacks=[callback])
 
     return model
 
