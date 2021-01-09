@@ -1,7 +1,6 @@
 import logging
 import numpy as np
 import pandas as pd
-from sklearn.preprocessing import OneHotEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 from tensorflow.keras.layers import Dense, Dropout
@@ -36,8 +35,10 @@ def process_raw_data_generic(raw_data, class_mappings):
 
 def split_data_generic(data, parameters):
     X = data.iloc[:, :-1]
-    for column in X.columns:
-        X[column] = (X[column] - X[column].min()) / (X[column].max() - X[column].min())
+
+    for i in range(len(X.index)):
+        X.iloc[i, :] = X.iloc[i, :] / np.linalg.norm(X.iloc[i, :])
+
     y = np.array(data["Class"])
     y_one_hot = to_categorical(y)
     print(y_one_hot)
@@ -50,13 +51,12 @@ def split_data_generic(data, parameters):
 
 def train_model_generic(X_train, y_train):
 
-    callback = EarlyStopping(monitor='loss', patience=3)
+    callback = EarlyStopping(monitor='loss', patience=5)
 
     model = Sequential([
-        Dense(64, input_shape=(34,), activation='relu', kernel_regularizer=l2(0.001)),
-        Dropout(0.2),
-        Dense(16, activation='relu', kernel_regularizer=l2(0.01)),
+        Dense(64, input_shape=(34,), activation='relu', kernel_regularizer=l2(0.01)),
         Dropout(0.1),
+        Dense(16, activation='relu'),
         Dense(3, activation='softmax')
     ])
 
