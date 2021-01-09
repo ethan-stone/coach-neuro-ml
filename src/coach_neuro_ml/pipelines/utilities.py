@@ -41,7 +41,6 @@ def split_data_generic(data, parameters):
 
     y = np.array(data["Class"])
     y_one_hot = to_categorical(y)
-    print(y_one_hot)
 
     X_train, X_test, y_train, y_test = train_test_split(X, y_one_hot, test_size=parameters["test_size"],
                                                         random_state=parameters["random_state"])
