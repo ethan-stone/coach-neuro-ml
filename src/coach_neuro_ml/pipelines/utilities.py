@@ -11,7 +11,6 @@ from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.regularizers import l2
 
 
-
 def process_raw_data_generic(raw_data, class_mappings):
     new_samples = []
 
