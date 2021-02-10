@@ -44,3 +44,35 @@ aws_basketball_front_legs_model:
   filepath: "s3://coachneuros3/models/basketball/front_legs/"
   credentials: dev_aws_s3
   versioned: True
+
+gcs_basketball_front_elbow_raw:
+  type: pandas.JSONDataSet
+  filepath: "gcs://coachneuromlbucket/raw-json-data/basketball/front_elbow.json"
+  credentials: ml_dev_storage_gcs
+
+gcs_basketball_front_elbow_primary:
+  type: pandas.CSVDataSet
+  filepath: "gcs://coachneuromlbucket/primary-csv-data/basketball/front_elbow.csv"
+  credentials: ml_dev_storage_gcs
+
+gcs_basketball_front_elbow_model:
+  type: tensorflow.TensorFlowModelDataset
+  filepath: "gcs://coachneuromlbucket/models/basketball/front_elbow/"
+  credentials: ml_dev_storage_gcs
+  versioned: True
+
+gcs_basketball_front_legs_raw:
+  type: pandas.JSONDataSet
+  filepath: "gcs://coachneuromlbucket/raw-json-data/basketball/front_legs.json"
+  credentials: ml_dev_storage_gcs
+
+gcs_basketball_front_legs_primary:
+  type: pandas.CSVDataSet
+  filepath: "gcs://coachneuromlbucket/raw-json-data/basketball/front_legs.csv"
+  credentials: ml_dev_storage_gcs
+
+gcs_basketball_front_legs_model:
+  type: tensorflow.TensorFlowModelDataset
+  filepath: "gcs://coachneuromlbucket/models/basketball/front_legs/"
+  credentials: ml_dev_storage_gcs
+  versioned: True
