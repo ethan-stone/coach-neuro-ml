@@ -2,7 +2,7 @@ import gcsfs
 from pathlib import PurePosixPath
 from typing import Any, Dict
 from kedro.io.core import (
-    AbstractVersionedDataSet,
+    AbstractDataSet,
     Version,
     get_protocol_and_path,
     get_filepath_str
@@ -10,26 +10,21 @@ from kedro.io.core import (
 import pandas as pd
 
 
-class GCSJSONDataSet(AbstractVersionedDataSet):
-    def __init__(self, filepath: str, credentials: Dict[str, Any], fs_args: Dict[str, Any], version: Version = None):
+class GCSJSONDataSet(AbstractDataSet):
+    def __init__(self, filepath: str, credentials: Dict[str, Any], fs_args: Dict[str, Any]):
         _, path = get_protocol_and_path(filepath)
         self._fs = gcsfs.GCSFileSystem(project=fs_args["project"], token=credentials["id_token"])
-
-        super().__init__(
-            filepath=PurePosixPath(path),
-            version=version,
-            exists_function=self._fs.exists,
-            glob_function=self._fs.glob
-        )
+        self._filepath = PurePosixPath(path)
 
     def _describe(self) -> Dict[str, Any]:
-        return dict(filepath=self._filepath, version=self._version)
+        return dict(filepath=self._filepath)
 
     def _load(self) -> pd.DataFrame:
-        load_path = self._get_load_path()
-        with self._fs.open(str(load_path), mode="r") as f:
+        print(str(self._filepath))
+        with self._fs.open(str(self._filepath), mode="r") as f:
             df = pd.read_json(f)
             return df
 
-    def _save(self, data: Any) -> None:
-            return None
+    def _save(self, data: pd.DataFrame) -> None:
+        with self._fs.open(str(self._filepath), mode="w") as f:
+            data.to_json(f)

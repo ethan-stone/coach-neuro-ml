@@ -3,11 +3,25 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
-from tensorflow.keras.layers import Dense, Dropout
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.callbacks import EarlyStopping
-from tensorflow.keras.utils import to_categorical
-from tensorflow.keras.regularizers import l2
+import torch
+import torch.nn.functional as F
+from torch.utils.data import TensorDataset, DataLoader
+
+
+def to_categorical(y, num_classes=None, dtype='float32'):
+    y = np.array(y, dtype='int')
+    input_shape = y.shape
+    if input_shape and input_shape[-1] == 1 and len(input_shape):
+        input_shape = tuple(input_shape[:-1])
+    y = y.ravel()
+    if not num_classes:
+        num_classes = np.max(y) + 1
+    n = y.shape[0]
+    categorical = np.zeros((n, num_classes), dtype=dtype)
+    categorical[np.arange(n), y] = 1
+    output_shape = input_shape + (num_classes,)
+    categorical = np.reshape(categorical, output_shape)
+    return categorical
 
 
 def process_raw_data_generic(raw_data, class_mappings):
@@ -50,18 +64,68 @@ def split_data_generic(data, parameters):
 
 def train_model_generic(X_train, y_train):
 
-    callback = EarlyStopping(monitor='loss', patience=5)
+    use_cuda = torch.cuda.is_available()
+    device = torch.device("cuda:0" if use_cuda else "cpu")
 
-    model = Sequential([
-        Dense(64, input_shape=(34,), activation='relu', kernel_regularizer=l2(0.01)),
-        Dropout(0.1),
-        Dense(16, activation='relu'),
-        Dense(3, activation='softmax')
-    ])
+    dataset = TensorDataset(X_train, y_train)
+    data_loader = DataLoader(dataset, batch_size=16)
 
-    model.compile(optimizer="Adam", loss="mse")
+    class Net(torch.nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.h1 = torch.nn.Linear(34, 64)
+            self.h2 = torch.nn.Linear(64, 16)
+            self.o = torch.nn.Linear(16, 3)
 
-    model.fit(X_train, y_train, epochs=100, batch_size=16, callbacks=[callback])
+            self.dropout = torch.nn.Dropout(0.1)
+
+        def forward(self, x):
+            x = F.relu(self.h1(x))
+            x = self.dropout(x)
+            x = F.relu(self.h2(x))
+            x = F.softmax(self.o(x), dim=1)
+            return x
+
+    model = Net()
+    criterion = torch.nn.MSELoss(reduction='sum')
+    optimizer = torch.optim.Adam(model.parameters())
+
+    epochs = 100
+
+    for epoch in range(epochs):
+        print("\n==============================\n")
+        print("Epoch = " + str(epoch))
+        running_loss = 0.0
+        for i, batch in enumerate(data_loader, 0):
+            inputs, labels = batch
+            inputs = inputs.to(device)
+            labels = labels.to(device)
+
+            y_pred = model(inputs)
+            loss = criterion(y_pred, labels)
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+
+            running_loss += loss.item()
+
+            if i % 100 == 99:
+                print('[%d, %5d] loss: %.3f' %
+                      (epoch + 1, i + 1, running_loss / 2000))
+                running_loss = 0.0
+    print("Finished Training")
+    # callback = EarlyStopping(monitor='loss', patience=5)
+    #
+    # model = Sequential([
+    #     Dense(64, input_shape=(34,), activation='relu', kernel_regularizer=l2(0.01)),
+    #     Dropout(0.1),
+    #     Dense(16, activation='relu'),
+    #     Dense(3, activation='softmax')
+    # ])
+    #
+    # model.compile(optimizer="Adam", loss="mse")
+    #
+    # model.fit(X_train, y_train, epochs=100, batch_size=16, callbacks=[callback])
 
     return model
 
