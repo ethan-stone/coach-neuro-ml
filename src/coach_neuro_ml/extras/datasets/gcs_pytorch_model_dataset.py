@@ -3,11 +3,12 @@ from pathlib import PurePosixPath
 from typing import Any, Dict
 import torch
 import os
+from ..utilities import Net
+
 from kedro.io.core import (
     AbstractVersionedDataSet,
     Version,
-    get_protocol_and_path,
-    get_filepath_str
+    get_protocol_and_path
 )
 
 
@@ -27,10 +28,10 @@ class GCSPyTorchModelDataSet(AbstractVersionedDataSet):
     def _describe(self) -> Dict[str, Any]:
         return dict(filepath=self._filepath, version=self._version)
 
-    def _load(self) -> torch.nn.Module:
+    def _load(self) -> Net:
         load_path = self._get_load_path()
         with self._fs.open(str(load_path), model="rb") as f:
-            model = torch.nn.Module()
+            model = Net()
             model.load_state_dict(torch.load(f))
             return model
 

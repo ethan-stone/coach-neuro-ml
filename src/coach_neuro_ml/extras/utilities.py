@@ -129,11 +129,12 @@ def evaluate_model_generic(model, X_test, y_test, model_name):
     X_test = torch.from_numpy(X_test.to_numpy().astype(np.float32)).to(device)
     y_test = y_test.astype(np.float32)
 
+    model = model.to(device)
+
     predictions = model(X_test)
     predictions = np.around(predictions.cpu().detach().numpy())
 
     accuracy = accuracy_score(y_test, predictions)
-    print(accuracy)
 
     logger = logging.getLogger(__name__)
     logger.info(f"{model_name} has an accuracy of {accuracy}")

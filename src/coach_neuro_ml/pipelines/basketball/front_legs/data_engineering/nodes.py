@@ -1,4 +1,4 @@
-from ......coach_neuro_ml.utilities import process_raw_data_generic
+from .....extras.utilities import process_raw_data_generic
 
 
 def process_raw_data(raw_data):
