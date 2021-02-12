@@ -1,12 +1,12 @@
 from pathlib import PurePosixPath
 from src.coach_neuro_ml.extras.datasets.gcs_csv_dataset import GCSCSVDataSet
-from src.coach_neuro_ml.pipelines.utilities import process_raw_data_generic
 
 
 def test_proper_instantiation():
     dataset = GCSCSVDataSet("gcs://coachneuromlbucket/primary-csv-data/basketball/front_elbow.csv",
                             {
-                                "id_token": "C:/Users/Ethan/CoachNeuro/coach-neuro-ml/conf/local/ml-dev-storage-service-account.json"
+                                "id_token": "C:/Users/Ethan/CoachNeuro/coach-neuro-ml/conf/local/ml-dev-storage"
+                                            "-service-account.json "
                             },
                             {"project": "coachneuro"})
     root = dataset._fs.ls("coachneuromlbucket")
@@ -16,7 +16,8 @@ def test_proper_instantiation():
 def test_describe():
     dataset = GCSCSVDataSet("gcs://coachneuromlbucket/primary-csv-data/basketball/front_elbow.csv",
                             {
-                                "id_token": "C:/Users/Ethan/CoachNeuro/coach-neuro-ml/conf/local/ml-dev-storage-service-account.json"
+                                "id_token": "C:/Users/Ethan/CoachNeuro/coach-neuro-ml/conf/local/ml-dev-storage"
+                                            "-service-account.json "
                             },
                             {"project": "coachneuro"})
     description = dataset._describe()
@@ -26,7 +27,8 @@ def test_describe():
 def test_load():
     dataset = GCSCSVDataSet("gcs://coachneuromlbucket/primary-csv-data/basketball/front_elbow.csv",
                             {
-                                "id_token": "C:/Users/Ethan/CoachNeuro/coach-neuro-ml/conf/local/ml-dev-storage-service-account.json"
+                                "id_token": "C:/Users/Ethan/CoachNeuro/coach-neuro-ml/conf/local/ml-dev-storage"
+                                            "-service-account.json "
                             },
                             {"project": "coachneuro"})
     df = dataset.load()
@@ -36,7 +38,8 @@ def test_load():
 def test_save():
     dataset = GCSCSVDataSet("gcs://coachneuromlbucket/primary-csv-data/basketball/front_elbow.csv",
                             {
-                                "id_token": "C:/Users/Ethan/CoachNeuro/coach-neuro-ml/conf/local/ml-dev-storage-service-account.json"
+                                "id_token": "C:/Users/Ethan/CoachNeuro/coach-neuro-ml/conf/local/ml-dev-storage"
+                                            "-service-account.json "
                             },
                             {"project": "coachneuro"})
     df = dataset.load()

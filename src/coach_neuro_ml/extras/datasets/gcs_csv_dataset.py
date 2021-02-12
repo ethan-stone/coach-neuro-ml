@@ -27,7 +27,7 @@ class GCSCSVDataSet(AbstractDataSet):
     def _save(self, data: pd.DataFrame) -> None:
         filename = os.path.basename(self._filepath)
         local_path = f"C:/Users/Ethan/CoachNeuro/coach-neuro-ml/temp/{filename}"
-        data.to_csv(local_path)
+        data.to_csv(local_path, index=False)
         with open(local_path, "rb") as local_file:
             with self._fs.open(str(self._filepath), mode="wb") as gcs_file:
                 gcs_file.write(local_file.read())

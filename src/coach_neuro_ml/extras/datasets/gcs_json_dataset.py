@@ -21,13 +21,12 @@ class GCSJSONDataSet(AbstractDataSet):
         return dict(filepath=self._filepath)
 
     def _load(self) -> pd.DataFrame:
-        print(str(self._filepath))
         with self._fs.open(str(self._filepath), mode="rb") as f:
             df = pd.read_json(f)
             return df
 
     def _save(self, data: pd.DataFrame) -> None:
-        filename = os.path.basename(self._filepath)
+        filename = os.path.basename(str(self._filepath))
         local_path = f"C:/Users/Ethan/CoachNeuro/coach-neuro-ml/temp/{filename}"
         data.to_json(local_path)
         with open(local_path, "rb") as local_file:

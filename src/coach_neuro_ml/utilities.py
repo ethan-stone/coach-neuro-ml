@@ -8,6 +8,23 @@ import torch.nn.functional as F
 from torch.utils.data import TensorDataset, DataLoader
 
 
+class Net(torch.nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.h1 = torch.nn.Linear(34, 64)
+        self.h2 = torch.nn.Linear(64, 16)
+        self.o = torch.nn.Linear(16, 3)
+
+        self.dropout = torch.nn.Dropout(0.1)
+
+    def forward(self, x):
+        x = F.relu(self.h1(x))
+        x = self.dropout(x)
+        x = F.relu(self.h2(x))
+        x = F.softmax(self.o(x), dim=1)
+        return x
+
+
 def to_categorical(y, num_classes=None, dtype='float32'):
     y = np.array(y, dtype='int')
     input_shape = y.shape
@@ -67,26 +84,14 @@ def train_model_generic(X_train, y_train):
     use_cuda = torch.cuda.is_available()
     device = torch.device("cuda:0" if use_cuda else "cpu")
 
-    dataset = TensorDataset(X_train, y_train)
+    dataset = TensorDataset(torch.from_numpy(X_train.to_numpy().astype(np.float32)),
+                            torch.from_numpy(y_train.astype(np.float32)))
+
     data_loader = DataLoader(dataset, batch_size=16)
 
-    class Net(torch.nn.Module):
-        def __init__(self):
-            super().__init__()
-            self.h1 = torch.nn.Linear(34, 64)
-            self.h2 = torch.nn.Linear(64, 16)
-            self.o = torch.nn.Linear(16, 3)
-
-            self.dropout = torch.nn.Dropout(0.1)
-
-        def forward(self, x):
-            x = F.relu(self.h1(x))
-            x = self.dropout(x)
-            x = F.relu(self.h2(x))
-            x = F.softmax(self.o(x), dim=1)
-            return x
-
     model = Net()
+    model.to(device)
+
     criterion = torch.nn.MSELoss(reduction='sum')
     optimizer = torch.optim.Adam(model.parameters())
 

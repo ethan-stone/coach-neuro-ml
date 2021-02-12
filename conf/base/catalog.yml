@@ -46,16 +46,18 @@
 #  versioned: True
 
 gcs_basketball_front_elbow_raw:
-  type: pandas.JSONDataSet
+  type: coach_neuro_ml.extras.datasets.gcs_json_dataset.GCSJSONDataSet
   filepath: "gcs://coachneuromlbucket/raw-json-data/basketball/front_elbow.json"
   credentials: ml_dev_storage_gcs
   fs_args:
     project: coachneuro
 
 gcs_basketball_front_elbow_primary:
-  type: pandas.CSVDataSet
+  type: coach_neuro_ml.extras.datasets.gcs_csv_datasets.GCSCSVDataSet
   filepath: "gcs://coachneuromlbucket/primary-csv-data/basketball/front_elbow.csv"
   credentials: ml_dev_storage_gcs
+  fs_args:
+    project: coachneuro
 
 gcs_basketball_front_elbow_model:
   type: tensorflow.TensorFlowModelDataset
@@ -64,12 +66,12 @@ gcs_basketball_front_elbow_model:
   versioned: True
 
 gcs_basketball_front_legs_raw:
-  type: pandas.JSONDataSet
+  type: coach_neuro_ml.extras.datasets.gcs_json_dataset.GCSJSONDataSet
   filepath: "gcs://coachneuromlbucket/raw-json-data/basketball/front_legs.json"
   credentials: ml_dev_storage_gcs
 
 gcs_basketball_front_legs_primary:
-  type: pandas.CSVDataSet
+  type: coach_neuro_ml.extras.datasets.gcs_csv_datasets.GCSCSVDataSet
   filepath: "gcs://coachneuromlbucket/raw-json-data/basketball/front_legs.csv"
   credentials: ml_dev_storage_gcs
 

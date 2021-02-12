@@ -1,4 +1,4 @@
-from ....utilities import split_data_generic, train_model_generic, evaluate_model_generic
+from ......coach_neuro_ml.utilities import split_data_generic, train_model_generic, evaluate_model_generic
 
 
 def split_data(data, parameters):
