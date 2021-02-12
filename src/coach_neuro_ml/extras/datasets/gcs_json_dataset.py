@@ -28,7 +28,9 @@ class GCSJSONDataSet(AbstractDataSet):
 
     def _save(self, data: pd.DataFrame) -> None:
         filename = os.path.basename(self._filepath)
-        data.to_json(f"C:/Users/Ethan/CoachNeuro/coach-neuro-ml/temp{filename}")
-        with open(f"C:/Users/Ethan/CoachNeuro/coach-neuro-ml/temp{filename}", "r") as local_file:
-            with self._fs.open(str(self._filepath), mode="w") as gcs_file:
+        local_path = f"C:/Users/Ethan/CoachNeuro/coach-neuro-ml/temp/{filename}"
+        data.to_json(local_path)
+        with open(local_path, "rb") as local_file:
+            with self._fs.open(str(self._filepath), mode="wb") as gcs_file:
                 gcs_file.write(local_file.read())
+        os.remove(local_path)

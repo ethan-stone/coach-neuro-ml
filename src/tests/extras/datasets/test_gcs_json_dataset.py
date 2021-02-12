@@ -10,7 +10,8 @@ def test_proper_instantiation():
                                  "id_token": "C:/Users/Ethan/CoachNeuro/coach-neuro-ml/conf/local/ml-dev-storage-service-account.json"},
                              {"project": "coachneuro"})
     root = dataset._fs.ls("coachneuromlbucket")
-    assert root == ["coachneuromlbucket/raw-json-data"]
+    print(root)
+    assert root == ['coachneuromlbucket/primary-csv-data', 'coachneuromlbucket/raw-json-data']
 
 
 def test_describe():
@@ -37,13 +38,5 @@ def test_save():
                                  "id_token": "C:/Users/Ethan/CoachNeuro/coach-neuro-ml/conf/local/ml-dev-storage-service-account.json"},
                              {"project": "coachneuro"})
     df = dataset.load()
-    new_df = process_raw_data_generic(df, {"i": 0, "m": 1, "o": 2})
 
-    dataset.save(new_df)
-
-    new_dataset = GCSJSONDataSet("gcs://coachneuromlbucket/raw-json-data/basketball/front_elbow.json",
-                             {
-                                 "id_token": "C:/Users/Ethan/CoachNeuro/coach-neuro-ml/conf/local/ml-dev-storage-service-account.json"},
-                             {"project": "coachneuro"})
-    loaded_new_df = new_dataset.load()
-    assert loaded_new_df is not None
+    dataset.save(df)
