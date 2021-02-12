@@ -7,6 +7,9 @@ import torch
 import torch.nn.functional as F
 from torch.utils.data import TensorDataset, DataLoader
 
+use_cuda = torch.cuda.is_available()
+device = torch.device("cuda:0" if use_cuda else "cpu")
+
 
 class Net(torch.nn.Module):
     def __init__(self):
@@ -15,7 +18,7 @@ class Net(torch.nn.Module):
         self.h2 = torch.nn.Linear(64, 16)
         self.o = torch.nn.Linear(16, 3)
 
-        self.dropout = torch.nn.Dropout(0.1)
+        self.dropout = torch.nn.Dropout(0.5)
 
     def forward(self, x):
         x = F.relu(self.h1(x))
@@ -80,12 +83,10 @@ def split_data_generic(data, parameters):
 
 
 def train_model_generic(X_train, y_train):
+    X_train = torch.from_numpy(X_train.to_numpy().astype(np.float32))
+    y_train = torch.from_numpy(y_train.astype(np.float32))
 
-    use_cuda = torch.cuda.is_available()
-    device = torch.device("cuda:0" if use_cuda else "cpu")
-
-    dataset = TensorDataset(torch.from_numpy(X_train.to_numpy().astype(np.float32)),
-                            torch.from_numpy(y_train.astype(np.float32)))
+    dataset = TensorDataset(X_train, y_train)
 
     data_loader = DataLoader(dataset, batch_size=16)
 
@@ -119,28 +120,20 @@ def train_model_generic(X_train, y_train):
                       (epoch + 1, i + 1, running_loss / 2000))
                 running_loss = 0.0
     print("Finished Training")
-    # callback = EarlyStopping(monitor='loss', patience=5)
-    #
-    # model = Sequential([
-    #     Dense(64, input_shape=(34,), activation='relu', kernel_regularizer=l2(0.01)),
-    #     Dropout(0.1),
-    #     Dense(16, activation='relu'),
-    #     Dense(3, activation='softmax')
-    # ])
-    #
-    # model.compile(optimizer="Adam", loss="mse")
-    #
-    # model.fit(X_train, y_train, epochs=100, batch_size=16, callbacks=[callback])
 
     return model
 
 
 def evaluate_model_generic(model, X_test, y_test, model_name):
 
-    predictions = model.predict(X_test)
-    predictions = np.around(predictions)
+    X_test = torch.from_numpy(X_test.to_numpy().astype(np.float32)).to(device)
+    y_test = y_test.astype(np.float32)
+
+    predictions = model(X_test)
+    predictions = np.around(predictions.cpu().detach().numpy())
 
     accuracy = accuracy_score(y_test, predictions)
+    print(accuracy)
 
     logger = logging.getLogger(__name__)
     logger.info(f"{model_name} has an accuracy of {accuracy}")
