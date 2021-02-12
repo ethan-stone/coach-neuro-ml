@@ -8,6 +8,7 @@ from kedro.io.core import (
     get_filepath_str
 )
 import pandas as pd
+import os
 
 
 class GCSJSONDataSet(AbstractDataSet):
@@ -21,10 +22,13 @@ class GCSJSONDataSet(AbstractDataSet):
 
     def _load(self) -> pd.DataFrame:
         print(str(self._filepath))
-        with self._fs.open(str(self._filepath), mode="r") as f:
+        with self._fs.open(str(self._filepath), mode="rb") as f:
             df = pd.read_json(f)
             return df
 
     def _save(self, data: pd.DataFrame) -> None:
-        with self._fs.open(str(self._filepath), mode="w") as f:
-            data.to_json(f)
+        filename = os.path.basename(self._filepath)
+        data.to_json(f"C:/Users/Ethan/CoachNeuro/coach-neuro-ml/temp{filename}")
+        with open(f"C:/Users/Ethan/CoachNeuro/coach-neuro-ml/temp{filename}", "r") as local_file:
+            with self._fs.open(str(self._filepath), mode="w") as gcs_file:
+                gcs_file.write(local_file.read())

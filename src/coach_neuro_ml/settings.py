@@ -27,7 +27,7 @@
 # limitations under the License.
 
 """Project settings."""
-from coach_neuro_ml.hooks import ProjectHooks
+from .hooks import ProjectHooks
 
 # Instantiate and list your project hooks here
 HOOKS = (ProjectHooks(),)

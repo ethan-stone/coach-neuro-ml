@@ -41,7 +41,7 @@ def test_save():
 
     dataset.save(new_df)
 
-    new_dataset = GCSJSONDataSet("gcs://coachneuromlbucket/raw-json-data/basketball/front_elbow.csv",
+    new_dataset = GCSJSONDataSet("gcs://coachneuromlbucket/raw-json-data/basketball/front_elbow.json",
                              {
                                  "id_token": "C:/Users/Ethan/CoachNeuro/coach-neuro-ml/conf/local/ml-dev-storage-service-account.json"},
                              {"project": "coachneuro"})
