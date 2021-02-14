@@ -77,7 +77,7 @@ gcs_basketball_front_legs_raw:
 
 gcs_basketball_front_legs_primary:
   type: coach_neuro_ml.extras.datasets.gcs_csv_dataset.GCSCSVDataSet
-  filepath: "gcs://coachneuromlbucket/raw-json-data/basketball/front_legs.csv"
+  filepath: "gcs://coachneuromlbucket/primary-csv-data/basketball/front_legs.csv"
   credentials: ml_dev_storage_gcs
   fs_args:
     project: coachneuro

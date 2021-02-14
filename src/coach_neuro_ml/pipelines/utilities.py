@@ -76,19 +76,19 @@ def train_model_generic(X_train, y_train, X_val, y_val):
     y_val = torch.from_numpy(y_val.astype(np.float32))
 
     train_set = TensorDataset(X_train, y_train)
-    train_loader = DataLoader(train_set, batch_size=16)
+    train_loader = DataLoader(train_set, batch_size=64)
 
     val_set = TensorDataset(X_val, y_val)
-    val_loader = DataLoader(val_set, batch_size=16)
+    val_loader = DataLoader(val_set, batch_size=64)
 
     model = Net()
     model.to(device)
 
     criterion = torch.nn.MSELoss(reduction='sum')
     optimizer = torch.optim.Adam(model.parameters())
-    early_stopping = LossEarlyStopping(5)
+    early_stopping = LossEarlyStopping(10)
 
-    epochs = 100
+    epochs = 1000
 
     train_losses = []
     valid_losses = []
@@ -98,7 +98,6 @@ def train_model_generic(X_train, y_train, X_val, y_val):
     for epoch in range(1, epochs + 1):
         print("\n==============================\n")
         print("Epoch = " + str(epoch))
-        running_loss = 0.0
 
         model.train()
         for i, batch in enumerate(train_loader, 0):
@@ -113,7 +112,6 @@ def train_model_generic(X_train, y_train, X_val, y_val):
             optimizer.step()
 
             train_losses.append(loss.item())
-            running_loss += loss.item()
 
         model.eval()
         for i, batch in enumerate(val_loader):

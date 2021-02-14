@@ -9,22 +9,25 @@ class Net(torch.nn.Module):
     def __init__(self):
         super().__init__()
         self.h1 = torch.nn.Linear(34, 64)
-        self.h2 = torch.nn.Linear(64, 16)
-        self.o = torch.nn.Linear(16, 3)
+        self.h2 = torch.nn.Linear(64, 128)
+        self.h3 = torch.nn.Linear(128, 64)
+        self.o = torch.nn.Linear(64, 3)
 
         self.dropout = torch.nn.Dropout(0.5)
 
     def forward(self, x):
         x = F.relu(self.h1(x))
-        x = self.dropout(x)
         x = F.relu(self.h2(x))
+        x = self.dropout(x)
+        x = F.relu(self.h3(x))
         x = F.softmax(self.o(x), dim=1)
+
         return x
 
 
 class EarlyStopping:
     def __init__(self, patience):
-        self.patience = 0
+        self.patience = patience
 
     def stop_early(self, last_metric): pass
 
@@ -36,6 +39,7 @@ class LossEarlyStopping(EarlyStopping):
         self.losses = [float("inf")]
 
     def stop_early(self, current_loss):
+        # -1 * (1 + self.count)
         if current_loss >= self.losses[-1]:
             self.count += 1
             self.losses.append(current_loss)
