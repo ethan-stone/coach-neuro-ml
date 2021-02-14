@@ -1,4 +1,4 @@
-from .....extras.utilities import process_raw_data_generic
+from ....utilities import process_raw_data_generic
 
 
 def process_raw_data(raw_data):

@@ -61,7 +61,7 @@ gcs_basketball_front_elbow_primary:
 
 gcs_basketball_front_elbow_model:
   type: coach_neuro_ml.extras.datasets.gcs_pytorch_model_dataset.GCSPyTorchModelDataSet
-  filepath: "gcs://coachneuromlbucket/models/basketball/front_elbow/"
+  filepath: "gcs://coachneuromlbucket/models/basketball/front_elbow.pt"
   credentials: ml_dev_storage_gcs
   fs_args:
     project: coachneuro
@@ -85,7 +85,7 @@ gcs_basketball_front_legs_primary:
 
 gcs_basketball_front_legs_model:
   type: coach_neuro_ml.extras.datasets.gcs_pytorch_model_dataset.GCSPyTorchModelDataSet
-  filepath: "gcs://coachneuromlbucket/models/basketball/front_legs/"
+  filepath: "gcs://coachneuromlbucket/models/basketball/front_legs.pt"
   credentials: ml_dev_storage_gcs
   fs_args:
     project: coachneuro
