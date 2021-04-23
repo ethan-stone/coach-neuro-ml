@@ -1,4 +1,6 @@
 import logging
+import cv2
+import mediapipe as mp
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -6,6 +8,9 @@ from sklearn.metrics import accuracy_score
 from ..extras.utilities import Net, LossEarlyStopping
 import torch
 from torch.utils.data import TensorDataset, DataLoader
+
+mp_drawing = mp.solutions.drawing_utils
+mp_pose = mp.solutions.pose
 
 use_cuda = torch.cuda.is_available()
 device = torch.device("cuda:0" if use_cuda else "cpu")
@@ -25,6 +30,29 @@ def to_categorical(y, num_classes=None, dtype='float32'):
     output_shape = input_shape + (num_classes,)
     categorical = np.reshape(categorical, output_shape)
     return categorical
+
+
+def gather_data_generic():
+    cap = cv2.cv2.VideoCapture(0)
+    with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as pose:
+        while cap.isOpened():
+            success, image = cap.read()
+            if not success:
+                print("Ignoring empty camera frame.")
+                continue
+
+            image = cv2.cvtColor(cv2.flip(image, 1), cv2.COLOR_BGR2RGB)
+            image.flags.writeable = False
+            results = pose.process(image)
+            image.flags.writeable = True
+            image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+            mp_drawing.draw_landmarks(image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
+            cv2.imshow("MediaPipe Pose", image)
+            if cv2.waitKey(5) & 0xFF == ord("q"):
+                break
+        cap.release()
+
+    return pd.DataFrame()
 
 
 def process_raw_data_generic(raw_data, class_mappings):

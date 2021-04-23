@@ -45,6 +45,10 @@
 #  credentials: dev_aws_s3
 #  versioned: True
 
+gcs_basketball_front_elbow_data:
+  type: pandas.CSVDataSet
+  filepath: "data/data.csv"
+
 gcs_basketball_front_elbow_raw:
   type: coach_neuro_ml.extras.datasets.gcs_json_dataset.GCSJSONDataSet
   filepath: "gcs://coachneuromlbucket/raw-json-data/basketball/front_elbow.json"
