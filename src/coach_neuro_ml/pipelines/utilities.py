@@ -1,4 +1,5 @@
 import logging
+from typing import Dict
 import cv2
 import mediapipe as mp
 import numpy as np
@@ -8,6 +9,7 @@ from sklearn.metrics import accuracy_score
 from ..extras.utilities import Net, LossEarlyStopping
 import torch
 from torch.utils.data import TensorDataset, DataLoader
+import time
 
 mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
@@ -32,27 +34,50 @@ def to_categorical(y, num_classes=None, dtype='float32'):
     return categorical
 
 
-def gather_data_generic():
+def gather_data_generic(class_mappings: Dict[str, int]):
+
+    columns = [str(i) for i in list(range(0, 66))]
+    columns.append("Class")
+
+    poses = pd.DataFrame(columns=columns)
+
     cap = cv2.cv2.VideoCapture(0)
     with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as pose:
         while cap.isOpened():
-            success, image = cap.read()
-            if not success:
-                print("Ignoring empty camera frame.")
-                continue
+            for class_name, class_val in class_mappings:
+                print(f"Starting class {class_name} in 5 seconds")
+                time.sleep(5)
+                start = time.time()
+                while time.time() - start < 10:
+                    success, image = cap.read()
+                    if not success:
+                        print("Ignoring empty camera frame.")
+                        continue
 
-            image = cv2.cvtColor(cv2.flip(image, 1), cv2.COLOR_BGR2RGB)
-            image.flags.writeable = False
-            results = pose.process(image)
-            image.flags.writeable = True
-            image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-            mp_drawing.draw_landmarks(image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
-            cv2.imshow("MediaPipe Pose", image)
-            if cv2.waitKey(5) & 0xFF == ord("q"):
+                    image = cv2.cvtColor(cv2.flip(image, 1), cv2.COLOR_BGR2RGB)
+                    image.flags.writeable = False
+                    results = pose.process(image)
+                    image.flags.writeable = True
+                    image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+                    mp_drawing.draw_landmarks(image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
+
+                    frame_pose = {}
+                    if results.pose_landmarks is not None:
+                        for lm_id, lm in enumerate(results.pose_landmarks.landmark):
+                            frame_pose[str(2 * lm_id)] = lm.x
+                            frame_pose[str(2 * lm_id + 1)] = lm.y
+                        frame_pose["Class"] = class_val
+
+                        poses.append(frame_pose, ignore_index=True)
+
+                    cv2.imshow("MediaPipe Pose", image)
+                    if cv2.waitKey(5) & 0xFF == ord("q"):
+                        break
                 break
+
         cap.release()
 
-    return pd.DataFrame()
+    return poses
 
 
 def process_raw_data_generic(raw_data, class_mappings):
@@ -109,7 +134,10 @@ def train_model_generic(X_train, y_train, X_val, y_val):
     val_set = TensorDataset(X_val, y_val)
     val_loader = DataLoader(val_set, batch_size=64)
 
-    model = Net()
+    input_dim = list(X_train.shape)[0]
+    output_dim = list(y_train.shape)[0]
+
+    model = Net(input_dim, output_dim)
     model.to(device)
 
     criterion = torch.nn.MSELoss(reduction='sum')

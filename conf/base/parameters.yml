@@ -1,3 +1,11 @@
 test_size: 0.15
 val_size: 0.2
 random_state: 69
+
+front_elbow_class_mappings:
+  elbow_out: 0
+  elbow_in: 1
+
+front_elbow_model_params:
+  input_dim: 66
+  output_dim:

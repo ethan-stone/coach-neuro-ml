@@ -6,12 +6,12 @@ device = torch.device("cuda:0" if use_cuda else "cpu")
 
 
 class Net(torch.nn.Module):
-    def __init__(self):
+    def __init__(self, input_dim, output_dim):
         super().__init__()
-        self.h1 = torch.nn.Linear(34, 64)
+        self.h1 = torch.nn.Linear(input_dim, 64)
         self.h2 = torch.nn.Linear(64, 128)
         self.h3 = torch.nn.Linear(128, 64)
-        self.o = torch.nn.Linear(64, 3)
+        self.o = torch.nn.Linear(64, output_dim)
 
         self.dropout = torch.nn.Dropout(0.5)
 
