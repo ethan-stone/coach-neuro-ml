@@ -58,6 +58,9 @@ gcs_basketball_front_elbow_model:
   credentials: ml_dev_storage_gcs
   fs_args:
     project: coachneuro
+  load_args:
+    model_input_dim: 66
+    model_output_dim: 2
   versioned: True
 
 gcs_basketball_front_legs_raw:
@@ -67,7 +70,6 @@ gcs_basketball_front_legs_raw:
   fs_args:
     project: coachneuro
 
-
 gcs_basketball_front_legs_primary:
   type: coach_neuro_ml.extras.datasets.gcs_csv_dataset.GCSCSVDataSet
   filepath: "gcs://coachneuromlbucket/primary-csv-data/basketball/front_legs.csv"
@@ -75,11 +77,13 @@ gcs_basketball_front_legs_primary:
   fs_args:
     project: coachneuro
 
-
 gcs_basketball_front_legs_model:
   type: coach_neuro_ml.extras.datasets.gcs_pytorch_model_dataset.GCSPyTorchModelDataSet
   filepath: "gcs://coachneuromlbucket/models/basketball/front_legs.pt"
   credentials: ml_dev_storage_gcs
   fs_args:
     project: coachneuro
+  load_args:
+    model_input_dim: 66
+    model_output_dim: 3
   versioned: True

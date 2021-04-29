@@ -36,15 +36,12 @@ def to_categorical(y, num_classes=None, dtype='float32'):
 
 def gather_data_generic(class_mappings: Dict[str, int]):
 
-    columns = [str(i) for i in list(range(0, 66))]
-    columns.append("Class")
-
-    poses = pd.DataFrame(columns=columns)
+    poses = []
 
     cap = cv2.cv2.VideoCapture(0)
     with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as pose:
         while cap.isOpened():
-            for class_name, class_val in class_mappings:
+            for class_name, class_val in class_mappings.items():
                 print(f"Starting class {class_name} in 5 seconds")
                 time.sleep(5)
                 start = time.time()
@@ -68,16 +65,19 @@ def gather_data_generic(class_mappings: Dict[str, int]):
                             frame_pose[str(2 * lm_id + 1)] = lm.y
                         frame_pose["Class"] = class_val
 
-                        poses.append(frame_pose, ignore_index=True)
+                        poses.append(frame_pose)
 
                     cv2.imshow("MediaPipe Pose", image)
                     if cv2.waitKey(5) & 0xFF == ord("q"):
                         break
-                break
+            break
 
         cap.release()
 
-    return poses
+    columns = [str(i) for i in list(range(0, 66))]
+    columns.append("Class")
+
+    return pd.DataFrame(poses, columns=columns)
 
 
 def process_raw_data_generic(raw_data, class_mappings):
@@ -121,7 +121,7 @@ def split_data_generic(data, parameters):
     return [X_train, X_test, X_val, y_val, y_train, y_test]
 
 
-def train_model_generic(X_train, y_train, X_val, y_val):
+def train_model_generic(X_train, y_train, X_val, y_val, parameters):
     X_train = torch.from_numpy(X_train.to_numpy().astype(np.float32))
     y_train = torch.from_numpy(y_train.astype(np.float32))
 
@@ -134,8 +134,8 @@ def train_model_generic(X_train, y_train, X_val, y_val):
     val_set = TensorDataset(X_val, y_val)
     val_loader = DataLoader(val_set, batch_size=64)
 
-    input_dim = list(X_train.shape)[0]
-    output_dim = list(y_train.shape)[0]
+    input_dim = parameters["input_dim"]
+    output_dim = parameters["output_dim"]
 
     model = Net(input_dim, output_dim)
     model.to(device)

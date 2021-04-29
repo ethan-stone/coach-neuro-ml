@@ -6,7 +6,7 @@ def create_pipeline():
     return Pipeline(
         [
             node(func=split_data,
-                 inputs=["gcs_basketball_front_elbow_primary", "parameters"],
+                 inputs=["gcs_basketball_front_elbow_primary", "params:split_data_params"],
                  outputs=["X_train_basketball_front_elbow",
                           "X_test_basketball_front_elbow",
                           "X_val_basketball_front_elbow",
@@ -18,7 +18,8 @@ def create_pipeline():
                  inputs=["X_train_basketball_front_elbow",
                          "y_train_basketball_front_elbow",
                          "X_val_basketball_front_elbow",
-                         "y_val_basketball_front_elbow"],
+                         "y_val_basketball_front_elbow",
+                         "params:front_elbow_model_params"],
                  outputs="gcs_basketball_front_elbow_model",
                  name="train_basketball_front_elbow_model"),
             node(func=evaluate_model,

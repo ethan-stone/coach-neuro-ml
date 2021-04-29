@@ -4,7 +4,6 @@ from typing import Any, Dict
 import torch
 import os
 from ..utilities import Net
-
 from kedro.io.core import (
     AbstractVersionedDataSet,
     Version,
@@ -14,9 +13,10 @@ from kedro.io.core import (
 
 class GCSPyTorchModelDataSet(AbstractVersionedDataSet):
     def __init__(self, filepath: str, version: Version = None, credentials: Dict[str, Any] = None,
-                 fs_args: Dict[str, Any] = None):
+                 fs_args: Dict[str, Any] = None, load_args: Dict[str, Any] = None):
         _, path = get_protocol_and_path(filepath)
         self._fs = gcsfs.GCSFileSystem(project=fs_args["project"], token=credentials["id_token"])
+        self.load_args = load_args
 
         super().__init__(
             filepath=PurePosixPath(path),
@@ -31,7 +31,7 @@ class GCSPyTorchModelDataSet(AbstractVersionedDataSet):
     def _load(self) -> Net:
         load_path = self._get_load_path()
         with self._fs.open(str(load_path), model="rb") as f:
-            model = Net()
+            model = Net(self.load_args["model_input_dim"], self.load_args["model_output_dim"])
             model.load_state_dict(torch.load(f))
             return model
 

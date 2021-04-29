@@ -6,8 +6,8 @@ def create_pipeline(**kwargs):
     return Pipeline(
         [
             node(func=gather_data,
-                 inputs=["parameters"],
-                 outputs=["gcs_basketball_front_elbow_primary"],
+                 inputs=["params:front_elbow_class_mappings"],
+                 outputs="gcs_basketball_front_elbow_primary",
                  name="gather_basketball_front_elbow_data")
         ]
     )

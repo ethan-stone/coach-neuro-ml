@@ -1,6 +1,7 @@
-test_size: 0.15
-val_size: 0.2
-random_state: 69
+split_data_params:
+  test_size: 0.15
+  val_size: 0.2
+  random_state: 69
 
 front_elbow_class_mappings:
   elbow_out: 0
@@ -8,4 +9,13 @@ front_elbow_class_mappings:
 
 front_elbow_model_params:
   input_dim: 66
-  output_dim:
+  output_dim: 2
+
+front_legs_class_mappings:
+  legs_narrow: 0
+  legs_good: 1
+  legs_wide: 2
+
+front_legs_model_params:
+  input_dim: 66
+  output_dim: 3
