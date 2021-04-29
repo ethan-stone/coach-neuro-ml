@@ -34,7 +34,7 @@ def to_categorical(y, num_classes=None, dtype='float32'):
     return categorical
 
 
-def gather_data_generic(class_mappings: Dict[str, int]):
+def gather_data_generic(class_mappings: Dict[str, int], data_gather_params: Dict[str, int]):
 
     poses = []
 
@@ -43,9 +43,9 @@ def gather_data_generic(class_mappings: Dict[str, int]):
         while cap.isOpened():
             for class_name, class_val in class_mappings.items():
                 print(f"Starting class {class_name} in 5 seconds")
-                time.sleep(5)
+                time.sleep(data_gather_params["sleep_time"])
                 start = time.time()
-                while time.time() - start < 10:
+                while time.time() - start < data_gather_params["record_time"]:
                     success, image = cap.read()
                     if not success:
                         print("Ignoring empty camera frame.")

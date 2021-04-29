@@ -3,6 +3,10 @@ split_data_params:
   val_size: 0.2
   random_state: 69
 
+data_gather_params:
+  sleep_time: 5
+  record_time: 20
+
 front_elbow_class_mappings:
   elbow_out: 0
   elbow_in: 1
