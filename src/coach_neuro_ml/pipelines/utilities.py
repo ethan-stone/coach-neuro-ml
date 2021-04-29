@@ -61,8 +61,9 @@ def gather_data_generic(class_mappings: Dict[str, int]):
                     frame_pose = {}
                     if results.pose_landmarks is not None:
                         for lm_id, lm in enumerate(results.pose_landmarks.landmark):
-                            frame_pose[str(2 * lm_id)] = lm.x
-                            frame_pose[str(2 * lm_id + 1)] = lm.y
+                            h, w, _ = image.shape
+                            frame_pose[str(2 * lm_id)] = lm.x * w
+                            frame_pose[str(2 * lm_id + 1)] = lm.y * h
                         frame_pose["Class"] = class_val
 
                         poses.append(frame_pose)
