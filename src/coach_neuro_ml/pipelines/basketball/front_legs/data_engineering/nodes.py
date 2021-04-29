@@ -1,16 +1,6 @@
-from ....utilities import process_raw_data_generic
+from ....utilities import gather_data_generic
 
 
-def process_raw_data(raw_data):
+def gather_data(class_mappings, data_gather_params):
 
-    # w = wide stance
-    # g = good stance
-    # n = narrow stance
-
-    class_mappings = {
-        "g": 0,
-        "w": 1,
-        "n": 2
-    }
-
-    return process_raw_data_generic(raw_data, class_mappings)
+    return gather_data_generic(class_mappings, data_gather_params)
