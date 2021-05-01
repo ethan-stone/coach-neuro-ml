@@ -19,7 +19,7 @@ def create_pipeline():
                          "y_train_basketball_front_legs",
                          "X_val_basketball_front_legs",
                          "y_val_basketball_front_legs",
-                         "params:front_elbow_model_params"],
+                         "params:front_legs_model_params"],
                  outputs="gcs_basketball_front_legs_model",
                  name="train_basketball_front_legs_model"),
             node(func=evaluate_model,
