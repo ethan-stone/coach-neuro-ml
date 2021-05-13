@@ -41,6 +41,10 @@ from pathlib import Path
 import pytest
 from kedro.framework.context import KedroContext
 
+import warnings
+
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+
 
 @pytest.fixture
 def project_context():

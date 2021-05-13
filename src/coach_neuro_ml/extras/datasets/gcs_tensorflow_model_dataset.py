@@ -1,9 +1,10 @@
 import gcsfs
+
 from pathlib import PurePosixPath
 from typing import Any, Dict
 import tensorflow as tf
 import os
-from ..utilities import Net
+import h5py
 from kedro.io.core import (
     AbstractVersionedDataSet,
     Version,
@@ -28,11 +29,17 @@ class GCSTensorflowModelDataSet(AbstractVersionedDataSet):
     def _describe(self) -> Dict[str, Any]:
         return dict(filepath=self._filepath, version=self._version)
 
-    def _load(self) -> Net:
+    def _load(self) -> tf.keras.Model:
         load_path = self._get_load_path()
-        with self._fs.open(str(load_path), model="rb") as f:
-            model = tf.keras.models.load_model(str(load_path))
-            return model
+        filename = os.path.basename(str(load_path))
+        local_path = f"C:/Users/Ethan/CoachNeuro/coach-neuro-ml/temp/{filename}"
+        with open(local_path, mode="wb") as local_file:
+            with self._fs.open(str(load_path), model="rb") as gcs_file:
+                local_file.write(gcs_file.read())
+                model = tf.keras.models.load_model(h5py.File(local_path, "r"))
+
+        os.remove(local_path)
+        return model
 
     def _save(self, model: tf.keras.Model):
         save_path = self._get_save_path()
