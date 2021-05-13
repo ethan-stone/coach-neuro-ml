@@ -1,7 +1,7 @@
 import gcsfs
 from pathlib import PurePosixPath
 from typing import Any, Dict
-import torch
+import tensorflow as tf
 import os
 from ..utilities import Net
 from kedro.io.core import (
@@ -11,7 +11,7 @@ from kedro.io.core import (
 )
 
 
-class GCSPyTorchModelDataSet(AbstractVersionedDataSet):
+class GCSTensorflowModelDataSet(AbstractVersionedDataSet):
     def __init__(self, filepath: str, version: Version = None, credentials: Dict[str, Any] = None,
                  fs_args: Dict[str, Any] = None, load_args: Dict[str, Any] = None):
         _, path = get_protocol_and_path(filepath)
@@ -31,15 +31,14 @@ class GCSPyTorchModelDataSet(AbstractVersionedDataSet):
     def _load(self) -> Net:
         load_path = self._get_load_path()
         with self._fs.open(str(load_path), model="rb") as f:
-            model = Net(self.load_args["model_input_dim"], self.load_args["model_output_dim"])
-            model.load_state_dict(torch.load(f))
+            model = tf.keras.models.load_model(str(load_path))
             return model
 
-    def _save(self, model: torch.nn.Module):
+    def _save(self, model: tf.keras.Model):
         save_path = self._get_save_path()
         filename = os.path.basename(str(save_path))
         local_path = f"C:/Users/Ethan/CoachNeuro/coach-neuro-ml/temp/{filename}"
-        torch.save(model.state_dict(), local_path)
+        model.save(local_path)
         with open(local_path, mode="rb") as local_file:
             with self._fs.open(str(save_path), mode="wb") as gcs_file:
                 gcs_file.write(local_file.read())

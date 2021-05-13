@@ -1,5 +1,5 @@
 from pathlib import PurePosixPath
-from src.coach_neuro_ml.extras.datasets.gcs_pytorch_model_dataset import GCSPyTorchModelDataSet
+from src.coach_neuro_ml.extras.datasets.gcs_tensorflow_model_dataset import GCSPyTorchModelDataSet
 from src.coach_neuro_ml.extras.datasets.gcs_csv_dataset import GCSCSVDataSet
 from src.coach_neuro_ml.pipelines.utilities import split_data_generic, train_model_generic, evaluate_model_generic
 from kedro.io.core import Version

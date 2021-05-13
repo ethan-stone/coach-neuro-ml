@@ -3,48 +3,6 @@
 # Documentation for this file format can be found in "The Data Catalog"
 # Link: https://kedro.readthedocs.io/en/stable/04_user_guide/04_data_catalog.html
 
-#elbow_raw_dataset:
-#  type: pandas.JSONDataSet
-#  filepath: "abfs://raw-json-data/elbow.json"
-#  credentials: dev_azure_blob
-#
-#elbow_primary_dataset:
-#  type: pandas.CSVDataSet
-#  filepath: "abfs://primary-csv-data/elbow.csv"
-#  credentials: dev_azure_blob
-
-#aws_basketball_front_elbow_raw:
-#  type: pandas.JSONDataSet
-#  filepath: "s3://coachneuros3/raw-json-data/basketball/front_elbow.json"
-#  credentials: dev_aws_s3
-#
-#aws_basketball_front_elbow_primary:
-#  type: pandas.CSVDataSet
-#  filepath: "s3://coachneuros3/primary-csv-data/basketball/front_elbow.csv"
-#  credentials: dev_aws_s3
-#
-#aws_basketball_front_elbow_model:
-#  type: tensorflow.TensorFlowModelDataset
-#  filepath: "s3://coachneuros3/models/basketball/front_elbow/"
-#  credentials: dev_aws_s3
-#  versioned: True
-#
-#aws_basketball_front_legs_raw:
-#  type: pandas.JSONDataSet
-#  filepath: "s3://coachneuros3/raw-json-data/basketball/front_legs.json"
-#  credentials: dev_aws_s3
-#
-#aws_basketball_front_legs_primary:
-#  type: pandas.CSVDataSet
-#  filepath: "s3://coachneuros3/raw-json-data/basketball/front_legs.csv"
-#  credentials: dev_aws_s3
-#
-#aws_basketball_front_legs_model:
-#  type: tensorflow.TensorFlowModelDataset
-#  filepath: "s3://coachneuros3/models/basketball/front_legs/"
-#  credentials: dev_aws_s3
-#  versioned: True
-
 gcs_basketball_front_elbow_primary:
   type: coach_neuro_ml.extras.datasets.gcs_csv_dataset.GCSCSVDataSet
   filepath: "gcs://coachneuromlbucket/primary-csv-data/basketball/front_elbow.csv"
@@ -53,7 +11,7 @@ gcs_basketball_front_elbow_primary:
     project: coachneuro
 
 gcs_basketball_front_elbow_model:
-  type: coach_neuro_ml.extras.datasets.gcs_pytorch_model_dataset.GCSPyTorchModelDataSet
+  type: coach_neuro_ml.extras.datasets.gcs_tensorflow_model_dataset.GCSTensorflowModelDataSet
   filepath: "gcs://coachneuromlbucket/models/basketball/front_elbow.pt"
   credentials: ml_dev_storage_gcs
   fs_args:
@@ -78,7 +36,7 @@ gcs_basketball_front_legs_primary:
     project: coachneuro
 
 gcs_basketball_front_legs_model:
-  type: coach_neuro_ml.extras.datasets.gcs_pytorch_model_dataset.GCSPyTorchModelDataSet
+  type: coach_neuro_ml.extras.datasets.gcs_tensorflow_model_dataset.GCSTensorflowModelDataSet
   filepath: "gcs://coachneuromlbucket/models/basketball/front_legs.pt"
   credentials: ml_dev_storage_gcs
   fs_args:
