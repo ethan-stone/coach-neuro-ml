@@ -7,7 +7,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 import time
-from tensorflow.keras.layers import Input, Dense, Dropout
+from tensorflow.keras.layers import InputLayer, Dense, Dropout
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.utils import to_categorical
@@ -113,7 +113,7 @@ def train_model_generic(X_train, y_train, X_val, y_val, parameters):
     early_stopping = EarlyStopping(monitor='loss', patience=5)
 
     model = Sequential([
-        Input(input_dim),
+        InputLayer(input_shape=(input_dim, )),
         Dense(64, activation="relu", kernel_regularizer=l2(0.01)),
         Dropout(0.1),
         Dense(128, activation="relu"),
