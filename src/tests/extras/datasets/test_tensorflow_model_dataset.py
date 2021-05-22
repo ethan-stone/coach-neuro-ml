@@ -6,30 +6,29 @@ from kedro.io.core import Version
 
 
 def test_describe():
-    dataset = GCSTensorflowModelDataSet("gcs://coachneuromlbucket/models/basketball/front_legs.pt",
+    dataset = GCSTensorflowModelDataSet("gcs://coachneuro-dev-ml/models/basketball/front_legs.pt",
                                      version=Version(None, None),
                                      credentials={"id_token": "C:/Users/Ethan/CoachNeuro/coach-neuro-ml/conf/local"
-                                                              "/ml-dev-storage-service-account.json"},
-                                     fs_args={"project": "coachneuro"})
+                                                              "/coachneuro-dev-ml.json"},
+                                     fs_args={"project": "coachneuro-dev"})
     description = dataset._describe()
-    assert description == dict(filepath=PurePosixPath("coachneuromlbucket/models/basketball/front_legs.pt"),
+    assert description == dict(filepath=PurePosixPath("coachneuro-dev-ml/models/basketball/front_legs.pt"),
                                version=Version(None, None))
 
 
 def test_save():
-    tensorflow_dataset = GCSTensorflowModelDataSet("gcs://coachneuromlbucket/models/basketball/front_legs.h5",
+    tensorflow_dataset = GCSTensorflowModelDataSet("gcs://coachneuro-dev-ml/models/basketball/front_legs.h5",
                                              version=Version(None, None),
                                              credentials={
                                                  "id_token": "C:/Users/Ethan/CoachNeuro/coach-neuro-ml/conf/local"
-                                                             "/ml-dev-storage-service-account.json"},
-                                             fs_args={"project": "coachneuro"})
+                                                             "/coachneuro-dev-ml.json"},
+                                             fs_args={"project": "coachneuro-dev"})
 
-    dataset = GCSCSVDataSet("gcs://coachneuromlbucket/primary-csv-data/basketball/front_elbow.csv",
+    dataset = GCSCSVDataSet("gcs://coachneuro-dev-ml/primary-csv-data/basketball/front_elbow.csv",
                             {
-                                "id_token": "C:/Users/Ethan/CoachNeuro/coach-neuro-ml/conf/local/ml-dev-storage"
-                                            "-service-account.json "
+                                "id_token": "C:/Users/Ethan/CoachNeuro/coach-neuro-ml/conf/local/coachneuro-dev-ml.json"
                             },
-                            {"project": "coachneuro"})
+                            {"project": "coachneuro-dev"})
 
     df = dataset.load()
 
@@ -48,11 +47,11 @@ def test_save():
 
 def test_load():
 
-    dataset = GCSTensorflowModelDataSet("gcs://coachneuromlbucket/models/basketball/front_legs.h5",
+    dataset = GCSTensorflowModelDataSet("gcs://coachneuro-dev-ml/models/basketball/front_legs.h5",
                                      version=Version(None, None),
                                      credentials={"id_token": "C:/Users/Ethan/CoachNeuro/coach-neuro-ml/conf/local"
-                                                              "/ml-dev-storage-service-account.json"},
-                                     fs_args={"project": "coachneuro"})
+                                                              "/coachneuro-dev-ml.json"},
+                                     fs_args={"project": "coachneuro-dev"})
     try:
         dataset.load()
     except Exception as e:

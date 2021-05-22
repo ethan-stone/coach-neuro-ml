@@ -5,17 +5,17 @@
 
 gcs_basketball_front_elbow_primary:
   type: coach_neuro_ml.extras.datasets.gcs_csv_dataset.GCSCSVDataSet
-  filepath: "gcs://coachneuromlbucket/primary-csv-data/basketball/front_elbow.csv"
+  filepath: "gcs://coachneuro-dev-ml/primary-csv-data/basketball/front_elbow.csv"
   credentials: ml_dev_storage_gcs
   fs_args:
-    project: coachneuro
+    project: coachneuro-dev
 
 gcs_basketball_front_elbow_model:
   type: coach_neuro_ml.extras.datasets.gcs_tensorflow_model_dataset.GCSTensorflowModelDataSet
-  filepath: "gcs://coachneuromlbucket/models/basketball/front_elbow.h5"
+  filepath: "gcs://coachneuro-dev-ml/models/basketball/front_elbow.h5"
   credentials: ml_dev_storage_gcs
   fs_args:
-    project: coachneuro
+    project: coachneuro-dev
   load_args:
     model_input_dim: 66
     model_output_dim: 2
@@ -23,24 +23,24 @@ gcs_basketball_front_elbow_model:
 
 gcs_basketball_front_legs_raw:
   type: coach_neuro_ml.extras.datasets.gcs_json_dataset.GCSJSONDataSet
-  filepath: "gcs://coachneuromlbucket/raw-json-data/basketball/front_legs.json"
+  filepath: "gcs://coachneuro-dev-ml/raw-json-data/basketball/front_legs.json"
   credentials: ml_dev_storage_gcs
   fs_args:
-    project: coachneuro
+    project: coachneuro-dev
 
 gcs_basketball_front_legs_primary:
   type: coach_neuro_ml.extras.datasets.gcs_csv_dataset.GCSCSVDataSet
-  filepath: "gcs://coachneuromlbucket/primary-csv-data/basketball/front_legs.csv"
+  filepath: "gcs://coachneuro-dev-ml/primary-csv-data/basketball/front_legs.csv"
   credentials: ml_dev_storage_gcs
   fs_args:
-    project: coachneuro
+    project: coachneuro-dev
 
 gcs_basketball_front_legs_model:
   type: coach_neuro_ml.extras.datasets.gcs_tensorflow_model_dataset.GCSTensorflowModelDataSet
-  filepath: "gcs://coachneuromlbucket/models/basketball/front_legs.h5"
+  filepath: "gcs://coachneuro-dev-ml/models/basketball/front_legs.h5"
   credentials: ml_dev_storage_gcs
   fs_args:
-    project: coachneuro
+    project: coachneuro-dev
   load_args:
     model_input_dim: 66
     model_output_dim: 3
