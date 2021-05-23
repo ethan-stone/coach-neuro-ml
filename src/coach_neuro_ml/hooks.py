@@ -60,6 +60,7 @@ class ProjectHooks:
             "basketball_front_elbow_mb_pipeline": basketball_front_elbow_mb_pipeline,
             "basketball_front_legs_de_pipeline": basketball_front_legs_de_pipeline,
             "basketball_front_legs_mb_pipeline": basketball_front_legs_mb_pipeline,
+            "basketball_front_mb": basketball_front_elbow_mb_pipeline + basketball_front_legs_mb_pipeline,
             "__default__":
             basketball_front_elbow_de_pipeline + basketball_front_elbow_mb_pipeline +
             basketball_front_legs_de_pipeline + basketball_front_legs_mb_pipeline

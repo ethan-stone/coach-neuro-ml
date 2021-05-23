@@ -6,13 +6,13 @@ from kedro.io.core import Version
 
 
 def test_describe():
-    dataset = GCSTensorflowModelDataSet("gcs://coachneuro-dev-ml/models/basketball/front_legs.pt",
+    dataset = GCSTensorflowModelDataSet("gcs://coachneuro-dev-ml/models/basketball/front_legs.h5",
                                      version=Version(None, None),
                                      credentials={"id_token": "C:/Users/Ethan/CoachNeuro/coach-neuro-ml/conf/local"
                                                               "/coachneuro-dev-ml.json"},
                                      fs_args={"project": "coachneuro-dev"})
     description = dataset._describe()
-    assert description == dict(filepath=PurePosixPath("coachneuro-dev-ml/models/basketball/front_legs.pt"),
+    assert description == dict(filepath=PurePosixPath("coachneuro-dev-ml/models/basketball/front_legs.h5"),
                                version=Version(None, None))
 
 
@@ -24,7 +24,7 @@ def test_save():
                                                              "/coachneuro-dev-ml.json"},
                                              fs_args={"project": "coachneuro-dev"})
 
-    dataset = GCSCSVDataSet("gcs://coachneuro-dev-ml/primary-csv-data/basketball/front_elbow.csv",
+    dataset = GCSCSVDataSet("gcs://coachneuro-dev-ml/primary-csv-data/basketball/front_legs.csv",
                             {
                                 "id_token": "C:/Users/Ethan/CoachNeuro/coach-neuro-ml/conf/local/coachneuro-dev-ml.json"
                             },
@@ -34,9 +34,9 @@ def test_save():
 
     X_train, X_test, X_val, y_val, y_train, y_test = split_data_generic(df, {"test_size": 0.15, "val_size": 0.2,
                                                                              "random_state": 69})
-    model = train_model_generic(X_train, y_train, X_val, y_val, {"input_dim": 66, "output_dim": 2})
+    model = train_model_generic(X_train, y_train, X_val, y_val, {"input_dim": 66, "output_dim": 3})
 
-    evaluate_model_generic(model, X_test, y_test, "BasketballFrontElbowModel")
+    evaluate_model_generic(model, X_test, y_test, "BasketballFrontLegsModel")
 
     try:
         tensorflow_dataset.save(model)

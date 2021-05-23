@@ -21,13 +21,6 @@ gcs_basketball_front_elbow_model:
     model_output_dim: 2
   versioned: True
 
-gcs_basketball_front_legs_raw:
-  type: coach_neuro_ml.extras.datasets.gcs_json_dataset.GCSJSONDataSet
-  filepath: "gcs://coachneuro-dev-ml/raw-json-data/basketball/front_legs.json"
-  credentials: ml_dev_storage_gcs
-  fs_args:
-    project: coachneuro-dev
-
 gcs_basketball_front_legs_primary:
   type: coach_neuro_ml.extras.datasets.gcs_csv_dataset.GCSCSVDataSet
   filepath: "gcs://coachneuro-dev-ml/primary-csv-data/basketball/front_legs.csv"
